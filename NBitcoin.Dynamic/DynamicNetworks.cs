@@ -62,46 +62,46 @@ namespace NBitcoin.Dynamic
 
 				_mainnet = builder.SetConsensus(new Consensus()
 				{
-					SubsidyHalvingInterval = 210240,
-					MajorityEnforceBlockUpgrade = 750,
-					MajorityRejectBlockOutdated = 950,
-					MajorityWindow = 1000,
-					BIP34Hash = new uint256("0x000007d91d1254d60e2dd1ae580383070a4ddffa4c64c2eeb4a2f9ecc0414343"),
-					PowLimit = new Target(new uint256("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")),
-					PowTargetTimespan = TimeSpan.FromSeconds(30 * 64), // Dynamic: 1920 seconds
-					PowTargetSpacing = TimeSpan.FromSeconds(2.5 * 60), // from chainparams.cpp consensus.nPowTargetSpacing = DEFAULT_AVERAGE_POW_BLOCK_TIME; 
-					PowAllowMinDifficultyBlocks = false,
-					PowNoRetargeting = false,
-					RuleChangeActivationThreshold = 321, // 95% of nMinerConfirmationWindow
-					MinerConfirmationWindow = 30,
-					CoinbaseMaturity = 100,
-					HashGenesisBlock = new uint256("0x00000e140b0c3028f898431890e9dea79ae6ca537ac9362c65b45325db712de2"),
+					SubsidyHalvingInterval = 210240, //needs review. can not find in dynamic repo
+					MajorityEnforceBlockUpgrade = 750,//from chainparams.cpp
+					MajorityRejectBlockOutdated = 950,//from chainparams.cpp
+					MajorityWindow = 1000,//from chainparams.cpp
+					BIP34Hash = new uint256("0x000007d91d1254d60e2dd1ae580383070a4ddffa4c64c2eeb4a2f9ecc0414343"), //needs review. can not find in dynamic repo
+					PowLimit = new Target(new uint256("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")),//from chainparams.cpp
+					PowTargetTimespan = TimeSpan.FromSeconds(30 * 64), // //from chainparams.cpp 
+					PowTargetSpacing = TimeSpan.FromSeconds(2.5 * 60), // from chainparams.cpp  
+					PowAllowMinDifficultyBlocks = false, //from chainparams.cpp
+					PowNoRetargeting = false, //from chainparams.cpp
+					RuleChangeActivationThreshold = 321, //from chainparams.cpp 
+					MinerConfirmationWindow = 30, //from chainparams.cpp
+					CoinbaseMaturity = 10,//from consensus.h
+					HashGenesisBlock = new uint256("0x00000e140b0c3028f898431890e9dea79ae6ca537ac9362c65b45325db712de2"),//from chainparams.cpp
 					GetPoWHash = GetPoWHash
 				})
-				.SetBase58Bytes(Base58Type.PUBKEY_ADDRESS, new byte[] { 0x4C })
-				.SetBase58Bytes(Base58Type.SCRIPT_ADDRESS, new byte[] { 0x10 })
-				.SetBase58Bytes(Base58Type.SECRET_KEY, new byte[] { 0xCC })
-				.SetBase58Bytes(Base58Type.EXT_PUBLIC_KEY, new byte[] { 0x04, 0x88, 0xB2, 0x1E })
-				.SetBase58Bytes(Base58Type.EXT_SECRET_KEY, new byte[] { 0x04, 0x88, 0xAD, 0xE4 })
-				.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("dynamic"))
-				.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("dynamic"))
-				.SetMagic(0xdbb6c0fb)
-				.SetPort(9999)
-				.SetRPCPort(9998)
-				.SetName("dynamic-main")
-				.AddAlias("dynamic-mainnet")
+				.SetBase58Bytes(Base58Type.PUBKEY_ADDRESS, new byte[] { 0x44 }) //needs review. dynamic chainsparams.cpp has "Dynamic Address start with 'D'. NBitcoin NetworkBuilder class treats this field as prefix. So, set to "D" using hex 0x44 
+				.SetBase58Bytes(Base58Type.SCRIPT_ADDRESS, new byte[] { 0x05 }) //needs review. dynamic chainsparams.cpp has "Dynamic script addresses start with '5'. NBitcoin NetworkBuilder class treats this field as prefix. So, set to "5" using hex 0x05 
+				.SetBase58Bytes(Base58Type.SECRET_KEY, new byte[] { 0x79 }) //needs review. dynamic chainsparams.cpp has "Dynamic private keys start with 'y'. NBitcoin NetworkBuilder class treats this field as prefix. So, set to "y" using hex 0x79 
+				.SetBase58Bytes(Base58Type.EXT_PUBLIC_KEY, new byte[] { 0x04, 0x88, 0xB2, 0x1E }) //from chainparams.cpp 
+				.SetBase58Bytes(Base58Type.EXT_SECRET_KEY, new byte[] { 0x04, 0x88, 0xAD, 0xE4 }) //from chainparams.cpp 
+				.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("dynamic")) //needs review. can not find in dynamic repo
+				.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("dynamic")) //needs review. can not find in dynamic repo
+				.SetMagic(0xdbb6c0fb) //needs review. readme.md has "Magic Bytes: 0x6e 0x71 0x84 0x90". Is this same parameter?
+				.SetPort(33300) //from readme.md
+				.SetRPCPort(33350) //from readme.md
+				.SetName("dynamic-main") //needs review. not sure about this
+				.AddAlias("dynamic-mainnet") //needs review. not sure about this
 				.AddDNSSeeds(new[]
 				{
-				new DNSSeedData("dnsseeder.io", "dyn2.dnsseeder.io"),
-				new DNSSeedData("dnsseeder.com", "dyn2.dnsseeder.com"),
-				new DNSSeedData("dnsseeder.host", "dyn2.dnsseeder.host"),
-				new DNSSeedData("dnsseeder.net", "dyn2.dnsseeder.net")
+				new DNSSeedData("dnsseeder.io", "dyn2.dnsseeder.io"), //from chainparams.cpp
+				new DNSSeedData("dnsseeder.com", "dyn2.dnsseeder.com"), //from chainparams.cpp
+				new DNSSeedData("dnsseeder.host", "dyn2.dnsseeder.host"), //from chainparams.cpp
+				new DNSSeedData("dnsseeder.net", "dyn2.dnsseeder.net") //from chainparams.cpp
 				})
 				.AddSeeds(ToSeed(pnSeed6_main))
 				.SetGenesis(new Block(new BlockHeader()
 				{
-					BlockTime = DateTimeOffset.FromUnixTimeSeconds(1390095618),
-					Nonce = 28917698,
+					BlockTime = DateTimeOffset.FromUnixTimeSeconds(1390095618), //needs review. does this need to be modified?
+					Nonce = 28917698, //needs review. does this need to be modified?
 				}))
 				.BuildAndRegister();
 
