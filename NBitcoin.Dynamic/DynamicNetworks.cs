@@ -62,14 +62,14 @@ namespace NBitcoin.Dynamic
 
 				_mainnet = builder.SetConsensus(new Consensus()
 				{
-					SubsidyHalvingInterval = 210240, //needs review. can not find in dynamic repo
+					SubsidyHalvingInterval = 2147483647, // set to maximum value for type int. dynamic does not use 
 					MajorityEnforceBlockUpgrade = 750,//from chainparams.cpp
 					MajorityRejectBlockOutdated = 950,//from chainparams.cpp
 					MajorityWindow = 1000,//from chainparams.cpp
-					BIP34Hash = new uint256("0x000007d91d1254d60e2dd1ae580383070a4ddffa4c64c2eeb4a2f9ecc0414343"), //needs review. can not find in dynamic repo
+					BIP34Hash = new uint256(), //no bip exists for dynamic. passing empty
 					PowLimit = new Target(new uint256("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")),//from chainparams.cpp
 					PowTargetTimespan = TimeSpan.FromSeconds(30 * 64), // //from chainparams.cpp 
-					PowTargetSpacing = TimeSpan.FromSeconds(2.5 * 60), // from chainparams.cpp  
+					PowTargetSpacing = TimeSpan.FromSeconds(2 * 64), // from util.h  
 					PowAllowMinDifficultyBlocks = false, //from chainparams.cpp
 					PowNoRetargeting = false, //from chainparams.cpp
 					RuleChangeActivationThreshold = 321, //from chainparams.cpp 
@@ -78,14 +78,14 @@ namespace NBitcoin.Dynamic
 					HashGenesisBlock = new uint256("0x00000e140b0c3028f898431890e9dea79ae6ca537ac9362c65b45325db712de2"),//from chainparams.cpp
 					GetPoWHash = GetPoWHash
 				})
-				.SetBase58Bytes(Base58Type.PUBKEY_ADDRESS, new byte[] { 0x44 }) //needs review. dynamic chainsparams.cpp has "Dynamic Address start with 'D'. NBitcoin NetworkBuilder class treats this field as prefix. So, set to "D" using hex 0x44 
-				.SetBase58Bytes(Base58Type.SCRIPT_ADDRESS, new byte[] { 0x05 }) //needs review. dynamic chainsparams.cpp has "Dynamic script addresses start with '5'. NBitcoin NetworkBuilder class treats this field as prefix. So, set to "5" using hex 0x05 
-				.SetBase58Bytes(Base58Type.SECRET_KEY, new byte[] { 0x79 }) //needs review. dynamic chainsparams.cpp has "Dynamic private keys start with 'y'. NBitcoin NetworkBuilder class treats this field as prefix. So, set to "y" using hex 0x79 
+				.SetBase58Bytes(Base58Type.PUBKEY_ADDRESS, new byte[] { 0x1e }) // from chainparams.cpp std::vector<unsigned char>(1,30)
+				.SetBase58Bytes(Base58Type.SCRIPT_ADDRESS, new byte[] { 0xa }) // from chainparams.cpp std::vector<unsigned char>(1,10) 
+				.SetBase58Bytes(Base58Type.SECRET_KEY, new byte[] { 0x8c }) // from chainparams.cpp  std::vector<unsigned char>(1,140)
 				.SetBase58Bytes(Base58Type.EXT_PUBLIC_KEY, new byte[] { 0x04, 0x88, 0xB2, 0x1E }) //from chainparams.cpp 
 				.SetBase58Bytes(Base58Type.EXT_SECRET_KEY, new byte[] { 0x04, 0x88, 0xAD, 0xE4 }) //from chainparams.cpp 
-				.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("dynamic")) //needs review. can not find in dynamic repo
-				.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("dynamic")) //needs review. can not find in dynamic repo
-				.SetMagic(0xdbb6c0fb) //needs review. readme.md has "Magic Bytes: 0x6e 0x71 0x84 0x90". Is this same parameter?
+				.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("dynamic")) //reviewed. leaving for now. does not appear to be implemented in dash
+				.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("dynamic")) //reviewed. leaving for now. does not appear to be implemented in dash
+				.SetMagic(0x5e617480) // from chainparams.cpp
 				.SetPort(33300) //from readme.md
 				.SetRPCPort(33350) //from readme.md
 				.SetName("dynamic-main") //needs review. not sure about this
@@ -100,8 +100,8 @@ namespace NBitcoin.Dynamic
 				.AddSeeds(ToSeed(pnSeed6_main))
 				.SetGenesis(new Block(new BlockHeader()
 				{
-					BlockTime = DateTimeOffset.FromUnixTimeSeconds(1390095618), //needs review. does this need to be modified?
-					Nonce = 28917698, //needs review. does this need to be modified?
+					BlockTime = DateTimeOffset.FromUnixTimeSeconds(1513619300), //from chainparams ln 168
+					Nonce = 626614, //from chainparams.cpp ln 168 and 100
 				}))
 				.BuildAndRegister();
 
@@ -117,43 +117,43 @@ namespace NBitcoin.Dynamic
 
 				_testnet = builder.SetConsensus(new Consensus()
 				{
-					SubsidyHalvingInterval = 210240,
-					MajorityEnforceBlockUpgrade = 51,
-					MajorityRejectBlockOutdated = 75,
-					MajorityWindow = 100,
-					PowLimit = new Target(new uint256("00000fffff000000000000000000000000000000000000000000000000000000")),
-					PowTargetTimespan = TimeSpan.FromSeconds(24 * 60 * 60),
-					PowTargetSpacing = TimeSpan.FromSeconds(2.5 * 60),
-					PowAllowMinDifficultyBlocks = true,
-					PowNoRetargeting = false,
-					RuleChangeActivationThreshold = 1512,
-					MinerConfirmationWindow = 2016,
-					CoinbaseMaturity = 100,
-					HashGenesisBlock = new uint256("0x00000bafbc94add76cb75e2ec92894837288a481e5c005f6563d91623bf8bc2c"),
+					SubsidyHalvingInterval = 2147483647, // set to maximum value for type int. dynamic does not use 
+					MajorityEnforceBlockUpgrade = 510, //from chainparams.cpp
+					MajorityRejectBlockOutdated = 750, //from chainparams.cpp
+					MajorityWindow = 1000, //from chainparams.cpp
+					PowLimit = new Target(new uint256("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")), //from chainparams.cpp
+					PowTargetTimespan = TimeSpan.FromSeconds(30 * 64), //from chainparams.cpp
+					PowTargetSpacing = TimeSpan.FromSeconds(2 * 64), // from util.h  
+					PowAllowMinDifficultyBlocks = true, //from chainparams.cpp
+					PowNoRetargeting = false, //from chainparams.cpp
+					RuleChangeActivationThreshold = 254, //from chainparams.cpp
+					MinerConfirmationWindow = 30, // from chainparams.cpp
+					 CoinbaseMaturity = 10, //from consensus.h
+					HashGenesisBlock = new uint256("0x000ab751d858e116043e741d097311f2382e600c219483cfda8f25c7f369cc2c"), //from chainparams.cpp
 					GetPoWHash = GetPoWHash
 				})
-				.SetBase58Bytes(Base58Type.PUBKEY_ADDRESS, new byte[] { 0x8C })
-				.SetBase58Bytes(Base58Type.SCRIPT_ADDRESS, new byte[] { 0x13 })
-				.SetBase58Bytes(Base58Type.SECRET_KEY, new byte[] { 0xEF })
-				.SetBase58Bytes(Base58Type.EXT_PUBLIC_KEY, new byte[] { 0x04, 0x35, 0x87, 0xCF })
-				.SetBase58Bytes(Base58Type.EXT_SECRET_KEY, new byte[] { 0x04, 0x35, 0x83, 0x94 })
-				.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("tdynamic"))
-				.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("tdynamic"))
-				.SetMagic(0xf1c8d2fd)
-				.SetPort(19999)
-				.SetRPCPort(19998)
-				.SetName("dynamic-test")
-				.AddAlias("dynamic-testnet")
+				.SetBase58Bytes(Base58Type.PUBKEY_ADDRESS, new byte[] { 0x1e }) // from chainparams.cpp std::vector<unsigned char>(1,30)
+				.SetBase58Bytes(Base58Type.SCRIPT_ADDRESS, new byte[] { 0xa }) // from chainparams.cpp std::vector<unsigned char>(1,10)
+				.SetBase58Bytes(Base58Type.SECRET_KEY, new byte[] { 0x9e }) // from chainparams.cpp  std::vector<unsigned char>(1,158)
+				.SetBase58Bytes(Base58Type.EXT_PUBLIC_KEY, new byte[] { 0x04, 0x35, 0x87, 0xCF }) //from chainparams.cpp 
+				.SetBase58Bytes(Base58Type.EXT_SECRET_KEY, new byte[] { 0x04, 0x35, 0x83, 0x94 }) //from chainparams.cpp 
+				.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("tdynamic")) //reviewed. leaving for now. does not appear to be implemented in dash
+				.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("tdynamic")) //reviewed. leaving for now. does not appear to be implemented in dash
+				.SetMagic(0x2f321540) //from chainparams.cpp 
+				.SetPort(33300 + 100) //from chainparams.cpp 
+				.SetRPCPort(33550) // from chainparamsbase.cpp
+				.SetName("dynamic-test") //needs review. not sure about this
+				.AddAlias("dynamic-testnet") //needs review. not sure about this
 				.AddDNSSeeds(new[]
 				{
-				new DNSSeedData("dynamicdot.io",  "testnet-seed.dynamicdot.io"),
-				new DNSSeedData("masternode.io", "test.dnsseed.masternode.io")
+				new DNSSeedData("",  ""), //needs review. see chainparams.cpp ln 287. Dash has this set to empty in their repo's chainparam's as well, but not in LykkeCity/NBitcoin.Dash https://github.com/LykkeCity/NBitcoin.Dash/blob/master/NBitcoin.Dash/DashNetworks.cs ln 157
+				new DNSSeedData("", "") //needs review as above
 				})
 				.AddSeeds(ToSeed(pnSeed6_test))
 				.SetGenesis(new Block(new BlockHeader()
 				{
-					BlockTime = DateTimeOffset.FromUnixTimeSeconds(1390666206),
-					Nonce = 3861367235,
+					BlockTime = DateTimeOffset.FromUnixTimeSeconds(1513619864), //from chainparams.cpp ln 276
+					Nonce = 43629, //from chainparams.cpp ln 276
 				}))
 				.BuildAndRegister();
 
