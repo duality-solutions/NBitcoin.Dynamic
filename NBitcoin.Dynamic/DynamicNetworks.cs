@@ -141,7 +141,7 @@ namespace NBitcoin.Dynamic
 				.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("tdynamic")) //reviewed. leaving for now. does not appear to be implemented in dash
 				.SetMagic(0x2f321540) //from chainparams.cpp 
 				.SetPort(33300 + 100) //from chainparams.cpp 
-				.SetRPCPort(33550) // from chainparamsbase.cpp
+				.SetRPCPort(33450) // from chainparamsbase.cpp
 				.SetName("dynamic-test") //needs review. not sure about this
 				.AddAlias("dynamic-testnet") //needs review. not sure about this
 				.AddDNSSeeds(new[]
