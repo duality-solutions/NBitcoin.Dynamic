@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Isopoh.Cryptography.Argon2" Version="1.0.8" />
     <PackageReference Include="NBitcoin" Version="4.0.0.40" />
   </ItemGroup>
 

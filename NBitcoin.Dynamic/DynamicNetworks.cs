@@ -83,13 +83,13 @@ namespace NBitcoin.Dynamic
 				.SetBase58Bytes(Base58Type.SECRET_KEY, new byte[] { 0x8c }) // from chainparams.cpp  std::vector<unsigned char>(1,140)
 				.SetBase58Bytes(Base58Type.EXT_PUBLIC_KEY, new byte[] { 0x04, 0x88, 0xB2, 0x1E }) //from chainparams.cpp 
 				.SetBase58Bytes(Base58Type.EXT_SECRET_KEY, new byte[] { 0x04, 0x88, 0xAD, 0xE4 }) //from chainparams.cpp 
-				.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("dynamic")) //reviewed. leaving for now. does not appear to be implemented in dash
-				.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("dynamic")) //reviewed. leaving for now. does not appear to be implemented in dash
+				.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("dynamic"))
+				.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("dynamic"))
 				.SetMagic(0x5e617480) // from chainparams.cpp
 				.SetPort(33300) //from readme.md
 				.SetRPCPort(33350) //from readme.md
-				.SetName("dynamic-main") //needs review. not sure about this
-				.AddAlias("dynamic-mainnet") //needs review. not sure about this
+				.SetName("dynamic-main")
+				.AddAlias("dynamic-mainnet")
 				.AddDNSSeeds(new[]
 				{
 				new DNSSeedData("dnsseeder.io", "dyn2.dnsseeder.io"), //from chainparams.cpp
@@ -137,17 +137,17 @@ namespace NBitcoin.Dynamic
 				.SetBase58Bytes(Base58Type.SECRET_KEY, new byte[] { 0x9e }) // from chainparams.cpp  std::vector<unsigned char>(1,158)
 				.SetBase58Bytes(Base58Type.EXT_PUBLIC_KEY, new byte[] { 0x04, 0x35, 0x87, 0xCF }) //from chainparams.cpp 
 				.SetBase58Bytes(Base58Type.EXT_SECRET_KEY, new byte[] { 0x04, 0x35, 0x83, 0x94 }) //from chainparams.cpp 
-				.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("tdynamic")) //reviewed. leaving for now. does not appear to be implemented in dash
-				.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("tdynamic")) //reviewed. leaving for now. does not appear to be implemented in dash
+				.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("tdynamic"))
+				.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("tdynamic"))
 				.SetMagic(0x2f321540) //from chainparams.cpp 
 				.SetPort(33300 + 100) //from chainparams.cpp 
 				.SetRPCPort(33450) // from chainparamsbase.cpp
-				.SetName("dynamic-test") //needs review. not sure about this
-				.AddAlias("dynamic-testnet") //needs review. not sure about this
+				.SetName("dynamic-test")
+				.AddAlias("dynamic-testnet")
 				.AddDNSSeeds(new[]
 				{
-				new DNSSeedData("",  ""), //needs review. see chainparams.cpp ln 287. Dash has this set to empty in their repo's chainparam's as well, but not in LykkeCity/NBitcoin.Dash https://github.com/LykkeCity/NBitcoin.Dash/blob/master/NBitcoin.Dash/DashNetworks.cs ln 157
-				new DNSSeedData("", "") //needs review as above
+				new DNSSeedData("",  ""),
+				new DNSSeedData("", "")
 				})
 				.AddSeeds(ToSeed(pnSeed6_test))
 				.SetGenesis(new Block(new BlockHeader()
@@ -164,7 +164,7 @@ namespace NBitcoin.Dynamic
 		private static uint256 GetPoWHash(BlockHeader header)
 		{
 			var headerBytes = header.ToBytes();
-			var h = Crypto.SCrypt.ComputeDerivedKey(headerBytes, headerBytes, 1024, 1, 1, null, 32);
+			var h = Crypto.Argon2d.Dynamic.Hash(headerBytes);
 			return new uint256(h);
 		}
 
