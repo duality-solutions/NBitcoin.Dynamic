@@ -5,7 +5,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <Company>Duality Blockchain Solutions</Company>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <Description>Nuget package for NBitcoin.Dynamic.</Description>
+    <Description>Networks, chain parameters and extended RPC calls instances for the Dynamic blockchain.</Description>
     <Copyright>Copyright 2018-present. All rights reservered.</Copyright>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageProjectUrl>https://duality.solutions/dynamic/</PackageProjectUrl>
@@ -14,7 +14,15 @@
     <RepositoryType>Blockchain library for Dynamic to use with NBitcoin</RepositoryType>
     <PackageTags>Blockchain Dynamic NBitcoin Bitcoin Duality</PackageTags>
     <Authors>NBitcoin Developers, Amir Abrams and Mark Schroeder</Authors>
-    <PackageReleaseNotes>First release.</PackageReleaseNotes>
+    <PackageReleaseNotes>This package extends the NBitcoin library 
+- Adds the Dynamic blockchain chain and network parameters. 
+- Adds GetAddressUTXOsAsync to the supported RPC calls.
+- Adds GetAddressTxIDsAsync to the supported RPC calls.
+- Adds GetTransactionAsync to the supported RPC calls.  GetTransactionAsync has more details than GetRawTransactionAsync like blockheight, tx time, and input values.
+- Adds</PackageReleaseNotes>
+    <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

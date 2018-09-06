@@ -61,11 +61,11 @@ namespace NBitcoin.Dynamic.RPC
         public DynamicRPCDynamicClient(string authenticationString, Uri address, Network network = null)
             : base(authenticationString, address, network) { }
 
-        public async Task<string> SendDynamicCommandAsync(string jsonPayload)
+        public async Task<string> SendDynamicCommandAsync(string jsonPayload, bool throwIfRPCError = true)
         {
             try
             {
-                return await SendDynamicCommandAsyncCore(jsonPayload).ConfigureAwait(false);
+                return await SendDynamicCommandAsyncCore(jsonPayload, throwIfRPCError).ConfigureAwait(false);
             }
             catch (WebException ex)
             {
@@ -74,15 +74,17 @@ namespace NBitcoin.Dynamic.RPC
                 if (GetCookiePath() == null)
                     throw;
 
-                return await SendDynamicCommandAsyncCore(jsonPayload).ConfigureAwait(false);
+                return await SendDynamicCommandAsyncCore(jsonPayload, throwIfRPCError).ConfigureAwait(false);
             }
         }
 
-        public async Task<string> GetAddressUTXOsAsync(string address)
+        public async Task<JsonTransaction> GetTransactionAsync(string txid, bool throwIfNotFound = true)
         {
-            string reponse = "";
+            JsonTransaction tx;
             try
             {
+                string strReponse = "";
+                //{"jsonrpc": "1.0", "id": "GetTransactionAsync", "method": "getrawtransaction", "params": ["mytxid", true] }
                 StringBuilder sb = new StringBuilder();
                 StringWriter sw = new StringWriter(sb);
                 JsonWriter configRPC = new JsonTextWriter(sw);
@@ -91,7 +93,41 @@ namespace NBitcoin.Dynamic.RPC
                 configRPC.WritePropertyName("jsonrpc");
                 configRPC.WriteValue("1.0");
                 configRPC.WritePropertyName("id");
-                configRPC.WriteValue("NBitcoin.Dynamic");
+                configRPC.WriteValue("GetTransactionAsync");
+                configRPC.WritePropertyName("method");
+                configRPC.WriteValue("getrawtransaction");
+                configRPC.WritePropertyName("params");
+                configRPC.WriteStartArray();
+                configRPC.WriteValue(txid);
+                configRPC.WriteValue(true);
+                configRPC.WriteEndArray();
+                configRPC.WriteEndObject();
+                strReponse = await SendDynamicCommandAsync(sb.ToString()).ConfigureAwait(true);
+                tx = JsonConvert.DeserializeObject<JsonTransaction>(strReponse);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to get UTXOs for address='{txid}'", ex);
+            }
+            return tx;
+        }
+
+        public async Task<JsonUTXOs> GetAddressUTXOsAsync(string address)
+        {
+            JsonUTXOs jsonUTXOs;
+            try
+            {
+                string strReponse = "";
+                //{"jsonrpc": "1.0", "id": "GetAddressUTXOsAsync", "method": "getaddressutxos", "params": [{"addresses": [address]}] }
+                StringBuilder sb = new StringBuilder();
+                StringWriter sw = new StringWriter(sb);
+                JsonWriter configRPC = new JsonTextWriter(sw);
+                configRPC.Formatting = Formatting.None;
+                configRPC.WriteStartObject();
+                configRPC.WritePropertyName("jsonrpc");
+                configRPC.WriteValue("1.0");
+                configRPC.WritePropertyName("id");
+                configRPC.WriteValue("GetAddressUTXOsAsync");
                 configRPC.WritePropertyName("method");
                 configRPC.WriteValue("getaddressutxos");
                 configRPC.WritePropertyName("params");
@@ -104,17 +140,55 @@ namespace NBitcoin.Dynamic.RPC
                 configRPC.WriteEndObject();
                 configRPC.WriteEndArray();
                 configRPC.WriteEndObject();
-
-                reponse = await SendDynamicCommandAsync(sb.ToString()).ConfigureAwait(true);
+                strReponse = await SendDynamicCommandAsync(sb.ToString()).ConfigureAwait(true);
+                jsonUTXOs = JsonConvert.DeserializeObject<JsonUTXOs>(strReponse);
             }
             catch (Exception ex)
             {
                 throw new Exception($"Failed to get UTXOs for address='{address}'", ex);
             }
-            return reponse;
+            return jsonUTXOs;
         }
 
-        async Task<string> SendDynamicCommandAsyncCore(string json)
+        public async Task<JsonAddressTxIDs> GetAddressTxIDsAsync(string address)
+        {
+            JsonAddressTxIDs jsonAddressTxIDs;
+            try
+            {
+                string strReponse = "";
+                //{"jsonrpc": "1.0", "id": "GetAddressTxIDsAsync", "method": "getaddresstxids", "params": [{"addresses": [address]}] }
+                StringBuilder sb = new StringBuilder();
+                StringWriter sw = new StringWriter(sb);
+                JsonWriter configRPC = new JsonTextWriter(sw);
+                configRPC.Formatting = Formatting.None;
+                configRPC.WriteStartObject();
+                configRPC.WritePropertyName("jsonrpc");
+                configRPC.WriteValue("1.0");
+                configRPC.WritePropertyName("id");
+                configRPC.WriteValue("GetAddressTxIDsAsync");
+                configRPC.WritePropertyName("method");
+                configRPC.WriteValue("getaddresstxids");
+                configRPC.WritePropertyName("params");
+                configRPC.WriteStartArray();
+                configRPC.WriteStartObject();
+                configRPC.WritePropertyName("addresses");
+                configRPC.WriteStartArray();
+                configRPC.WriteValue(address);
+                configRPC.WriteEndArray();
+                configRPC.WriteEndObject();
+                configRPC.WriteEndArray();
+                configRPC.WriteEndObject();
+                strReponse = await SendDynamicCommandAsync(sb.ToString()).ConfigureAwait(true);
+                jsonAddressTxIDs = JsonConvert.DeserializeObject<JsonAddressTxIDs>(strReponse);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to get TxIDs for address='{address}'", ex);
+            }
+            return jsonAddressTxIDs;
+        }
+
+        async Task<string> SendDynamicCommandAsyncCore(string json, bool throwIfRPCError)
         {
             string response = "";
             HttpWebRequest webRequest = CreateWebRequest();

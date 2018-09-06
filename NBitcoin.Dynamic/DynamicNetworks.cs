@@ -59,8 +59,7 @@ namespace NBitcoin.Dynamic
 			lock (_lock)
 			{
 				var builder = new NetworkBuilder();
-
-				_mainnet = builder.SetConsensus(new Consensus()
+                _mainnet = builder.SetConsensus(new Consensus()
 				{
 					SubsidyHalvingInterval = 2147483647, // set to maximum value for type int. dynamic does not use 
 					MajorityEnforceBlockUpgrade = 750,//from chainparams.cpp
