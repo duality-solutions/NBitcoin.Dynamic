@@ -9,7 +9,7 @@ using System.IO;
 
 namespace NBitcoin.Dynamic.RPC
 {
-    class DynamicRPCDynamicClient : RPCClient
+    public class DynamicRPCClient : RPCClient
     {
         //
         // Summary:
@@ -18,16 +18,16 @@ namespace NBitcoin.Dynamic.RPC
         // Parameters:
         //   network:
         //     The network used by the node. Must not be null.
-        public DynamicRPCDynamicClient(Network network)
+        public DynamicRPCClient(Network network)
             : base(network) { }
 
-        public DynamicRPCDynamicClient(RPCCredentialString credentials, Network network)
+        public DynamicRPCClient(RPCCredentialString credentials, Network network)
             : base(credentials, network) { }
 
-        public DynamicRPCDynamicClient(RPCCredentialString credentials, string host, Network network)
+        public DynamicRPCClient(RPCCredentialString credentials, string host, Network network)
             : base(credentials, host, network) { }
 
-        public DynamicRPCDynamicClient(RPCCredentialString credentials, Uri address, Network network)
+        public DynamicRPCClient(RPCCredentialString credentials, Uri address, Network network)
                 : base(credentials, address, network) { }
 
         //
@@ -41,10 +41,10 @@ namespace NBitcoin.Dynamic.RPC
         //   hostOrUri:
         //
         //   network:
-        public DynamicRPCDynamicClient(string authenticationString, string hostOrUri, Network network)
+        public DynamicRPCClient(string authenticationString, string hostOrUri, Network network)
             : base(authenticationString, hostOrUri, network) { }
 
-        public DynamicRPCDynamicClient(NetworkCredential credentials, Uri address, Network network = null)
+        public DynamicRPCClient(NetworkCredential credentials, Uri address, Network network = null)
             : base(credentials, address, network) { }
 
         //
@@ -58,7 +58,7 @@ namespace NBitcoin.Dynamic.RPC
         //   address:
         //
         //   network:
-        public DynamicRPCDynamicClient(string authenticationString, Uri address, Network network = null)
+        public DynamicRPCClient(string authenticationString, Uri address, Network network = null)
             : base(authenticationString, address, network) { }
 
         public async Task<string> SendDynamicCommandAsync(string jsonPayload, bool throwIfRPCError = true)
