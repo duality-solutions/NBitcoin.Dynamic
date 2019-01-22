@@ -8,7 +8,7 @@
     <Description>Networks, chain parameters and extended RPC calls instances for the Dynamic blockchain.</Description>
     <Copyright>Copyright 2018-present. All rights reservered.</Copyright>
     <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
-    <PackageProjectUrl>https://duality.solutions/dynamic/</PackageProjectUrl>
+    <PackageProjectUrl>https://duality.solutions/dynamic</PackageProjectUrl>
     <PackageIconUrl>https://github.com/duality-solutions/Logos/blob/master/Duality%20Logos/Dynamic/PNG/32x32.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/duality-solutions/NBitcoin.Dynamic</RepositoryUrl>
     <RepositoryType>Blockchain library for Dynamic to use with NBitcoin</RepositoryType>
