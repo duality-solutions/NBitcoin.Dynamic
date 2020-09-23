@@ -11,6 +11,7 @@ namespace NBitcoin.Dynamic
 	{
 		private static Network _mainnet;
 		private static Network _testnet;
+		private static Network _privatenet;
 		private static object _lock = new object();
 
 		static Tuple<byte[], int>[] pnSeed6_main = {
@@ -36,6 +37,11 @@ namespace NBitcoin.Dynamic
 			{
 				_testnet = RegisterTestnet();
 			}
+
+			if (_privatenet == null)
+			{
+				_privatenet = RegisterPrivatenet();
+			}
 		}
 
 		public static Network Mainnet
@@ -51,6 +57,13 @@ namespace NBitcoin.Dynamic
 			get
 			{
 				return _testnet ?? RegisterTestnet();
+			}
+		}
+		public static Network Privatenet
+		{
+			get
+			{
+				return _privatenet ?? RegisterPrivatenet();
 			}
 		}
 
@@ -143,6 +156,58 @@ namespace NBitcoin.Dynamic
 				.SetRPCPort(33450) // from chainparamsbase.cpp
 				.SetName("dynamic-test")
 				.AddAlias("dynamic-testnet")
+				.AddDNSSeeds(new[]
+				{
+				new DNSSeedData("",  ""),
+				new DNSSeedData("", "")
+				})
+				.AddSeeds(ToSeed(pnSeed6_test))
+				.SetGenesis(new Block(new BlockHeader()
+				{
+					BlockTime = DateTimeOffset.FromUnixTimeSeconds(1513619864), //from chainparams.cpp ln 276
+					Nonce = 43629, //from chainparams.cpp ln 276
+				}))
+				.BuildAndRegister();
+
+				return _testnet;
+			}
+		}
+
+		private static Network RegisterPrivatenet()
+		{
+			lock (_lock)
+			{
+				var builder = new NetworkBuilder();
+
+				_testnet = builder.SetConsensus(new Consensus()
+				{
+					SubsidyHalvingInterval = 2147483647, // set to maximum value for type int. dynamic does not use 
+					MajorityEnforceBlockUpgrade = 510, //from chainparams.cpp
+					MajorityRejectBlockOutdated = 750, //from chainparams.cpp
+					MajorityWindow = 1000, //from chainparams.cpp
+					PowLimit = new Target(new uint256("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")), //from chainparams.cpp
+					PowTargetTimespan = TimeSpan.FromSeconds(30 * 64), //from chainparams.cpp
+					PowTargetSpacing = TimeSpan.FromSeconds(2 * 64), // from util.h  
+					PowAllowMinDifficultyBlocks = true, //from chainparams.cpp
+					PowNoRetargeting = false, //from chainparams.cpp
+					RuleChangeActivationThreshold = 254, //from chainparams.cpp
+					MinerConfirmationWindow = 30, // from chainparams.cpp
+					CoinbaseMaturity = 10, //from consensus.h
+					HashGenesisBlock = new uint256("0x000ab751d858e116043e741d097311f2382e600c219483cfda8f25c7f369cc2c"), //from chainparams.cpp
+					GetPoWHash = GetPoWHash
+				})
+				.SetBase58Bytes(Base58Type.PUBKEY_ADDRESS, new byte[] { 0x1e }) // from chainparams.cpp std::vector<unsigned char>(1,30)
+				.SetBase58Bytes(Base58Type.SCRIPT_ADDRESS, new byte[] { 0xa }) // from chainparams.cpp std::vector<unsigned char>(1,10)
+				.SetBase58Bytes(Base58Type.SECRET_KEY, new byte[] { 0x9e }) // from chainparams.cpp  std::vector<unsigned char>(1,158)
+				.SetBase58Bytes(Base58Type.EXT_PUBLIC_KEY, new byte[] { 0x04, 0x35, 0x87, 0xCF }) //from chainparams.cpp 
+				.SetBase58Bytes(Base58Type.EXT_SECRET_KEY, new byte[] { 0x04, 0x35, 0x83, 0x94 }) //from chainparams.cpp 
+				.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("tdynamic"))
+				.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("tdynamic"))
+				.SetMagic(0x2f321540) //from chainparams.cpp 
+				.SetPort(33300 + 100) //from chainparams.cpp 
+				.SetRPCPort(33450) // from chainparamsbase.cpp
+				.SetName("dynamic-test")
+				.AddAlias("dynamic-privatenet")
 				.AddDNSSeeds(new[]
 				{
 				new DNSSeedData("",  ""),
