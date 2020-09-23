@@ -197,8 +197,8 @@ namespace NBitcoin.Dynamic
 					PowNoRetargeting = false, //from chainparams.cpp
 					RuleChangeActivationThreshold = 254, //from chainparams.cpp
 					MinerConfirmationWindow = 30, // from chainparams.cpp
-					CoinbaseMaturity = 10, //from consensus.h
-					HashGenesisBlock = new uint256("0x000ab751d858e116043e741d097311f2382e600c219483cfda8f25c7f369cc2c"), //from chainparams.cpp
+					CoinbaseMaturity = 10, //COINBASE_MATURITY from consensus.h
+					HashGenesisBlock = new uint256("0x000055a9348d53bed51996102ad11d129207e85dc197d01a5a69d5fd10af0e8a"), //from chainparams.cpp*
 					GetPoWHash = GetPoWHash
 				})
 				.SetBase58Bytes(Base58Type.PUBKEY_ADDRESS, new byte[] { 0x1e }) // from chainparams.cpp std::vector<unsigned char>(1,30)
@@ -208,9 +208,9 @@ namespace NBitcoin.Dynamic
 				.SetBase58Bytes(Base58Type.EXT_SECRET_KEY, new byte[] { 0x04, 0x35, 0x83, 0x94 }) //from chainparams.cpp 
 				.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("tdynamic"))
 				.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("tdynamic"))
-				.SetMagic(0x2f321540) //from chainparams.cpp 
-				.SetPort(33300 + 100) //from chainparams.cpp 
-				.SetRPCPort(33450) // from chainparamsbase.cpp
+				.SetMagic(0x2f321540) //from chainparams.cpp, pchMessageStart 
+				.SetPort(33300 + 300) //from chainparams.cpp *
+				.SetRPCPort(33650) // from chainparamsbase.cpp *
 				.SetName("dynamic-test")
 				.AddAlias("dynamic-privatenet")
 				.AddDNSSeeds(new[]
@@ -221,12 +221,12 @@ namespace NBitcoin.Dynamic
 				.AddSeeds(ToSeed(pnSeed6_privatenet))
 				.SetGenesis(new Block(new BlockHeader()
 				{
-					BlockTime = DateTimeOffset.FromUnixTimeSeconds(1513619864), //from chainparams.cpp ln 276
-					Nonce = 43629, //from chainparams.cpp ln 276
+					BlockTime = DateTimeOffset.FromUnixTimeSeconds(1559867972), //from chainparams.cpp, genesis = CreateGenesisBlock *
+					Nonce = 60883, //from chainparams.cpp, genesis = CreateGenesisBlock *
 				}))
 				.BuildAndRegister();
 
-				return _testnet;
+				return _privatenet;
 			}
 		}
 
