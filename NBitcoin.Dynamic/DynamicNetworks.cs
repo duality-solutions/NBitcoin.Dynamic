@@ -26,6 +26,11 @@ namespace NBitcoin.Dynamic
           //Tuple.Create(new byte[]{})
         };
 
+		static Tuple<byte[], int>[] pnSeed6_privatenet = {
+			Tuple.Create(new byte[]{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb2,0x80,0x90,0x1d}, 33600),
+			Tuple.Create(new byte[]{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x12,0xd6,0x40,0x09}, 33600)
+		};
+
 		public static void Register()
 		{
 			if (_mainnet == null)
@@ -179,7 +184,7 @@ namespace NBitcoin.Dynamic
 			{
 				var builder = new NetworkBuilder();
 
-				_testnet = builder.SetConsensus(new Consensus()
+				_privatenet = builder.SetConsensus(new Consensus()
 				{
 					SubsidyHalvingInterval = 2147483647, // set to maximum value for type int. dynamic does not use 
 					MajorityEnforceBlockUpgrade = 510, //from chainparams.cpp
@@ -213,7 +218,7 @@ namespace NBitcoin.Dynamic
 				new DNSSeedData("",  ""),
 				new DNSSeedData("", "")
 				})
-				.AddSeeds(ToSeed(pnSeed6_test))
+				.AddSeeds(ToSeed(pnSeed6_privatenet))
 				.SetGenesis(new Block(new BlockHeader()
 				{
 					BlockTime = DateTimeOffset.FromUnixTimeSeconds(1513619864), //from chainparams.cpp ln 276
