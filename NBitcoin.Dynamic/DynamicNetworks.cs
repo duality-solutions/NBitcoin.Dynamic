@@ -211,7 +211,7 @@ namespace NBitcoin.Dynamic
 				.SetMagic(0x2f321540) //from chainparams.cpp, pchMessageStart 
 				.SetPort(33300 + 300) //from chainparams.cpp *
 				.SetRPCPort(33650) // from chainparamsbase.cpp *
-				.SetName("dynamic-test")
+				.SetName("dynamic-private")
 				.AddAlias("dynamic-privatenet")
 				.AddDNSSeeds(new[]
 				{
