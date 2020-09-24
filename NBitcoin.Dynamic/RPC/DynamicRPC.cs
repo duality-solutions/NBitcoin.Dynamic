@@ -188,6 +188,39 @@ namespace NBitcoin.Dynamic.RPC
             return jsonAddressTxIDs;
         }
 
+        public async Task<Certificate> CertificateView(string serialnumber)
+        {
+            Certificate certificate;
+            try
+            {
+                string strReponse = "";
+                StringBuilder sb = new StringBuilder();
+                StringWriter sw = new StringWriter(sb);
+                JsonWriter configRPC = new JsonTextWriter(sw);
+                configRPC.Formatting = Formatting.None;
+                configRPC.WriteStartObject();
+                configRPC.WritePropertyName("jsonrpc");
+                configRPC.WriteValue("1.0");
+                configRPC.WritePropertyName("id");
+                configRPC.WriteValue("CertificateView");
+                configRPC.WritePropertyName("method");
+                configRPC.WriteValue("certificate");
+                configRPC.WritePropertyName("params");
+                configRPC.WriteStartArray();
+                configRPC.WriteValue("view");
+                configRPC.WriteValue(serialnumber);
+                configRPC.WriteEndArray();
+                configRPC.WriteEndObject();
+                strReponse = await SendDynamicCommandAsync(sb.ToString()).ConfigureAwait(true);
+                certificate = JsonConvert.DeserializeObject<Certificate>(strReponse);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to view certificate", ex);
+            }
+            return certificate;
+        }
+
         async Task<string> SendDynamicCommandAsyncCore(string json, bool throwIfRPCError)
         {
             string response = "";
