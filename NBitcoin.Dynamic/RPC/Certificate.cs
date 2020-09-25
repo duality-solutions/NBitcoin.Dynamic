@@ -25,4 +25,11 @@ namespace NBitcoin.Dynamic.RPC
         public string approve_height { get; set; }
     }
 
+    public class CertificateVerify
+    {
+        public string valid { get; set; }
+        public string certificate_subject_pubkey { get; set; }
+
+    }
+
 }

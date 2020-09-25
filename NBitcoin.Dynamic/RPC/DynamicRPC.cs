@@ -194,24 +194,11 @@ namespace NBitcoin.Dynamic.RPC
             try
             {
                 string strResponse = "";
-                StringBuilder sb = new StringBuilder();
-                StringWriter sw = new StringWriter(sb);
-                JsonWriter configRPC = new JsonTextWriter(sw);
-                configRPC.Formatting = Formatting.None;
-                configRPC.WriteStartObject();
-                configRPC.WritePropertyName("jsonrpc");
-                configRPC.WriteValue("1.0");
-                configRPC.WritePropertyName("id");
-                configRPC.WriteValue("CertificateView");
-                configRPC.WritePropertyName("method");
-                configRPC.WriteValue("certificate view");
-                configRPC.WritePropertyName("params");
-                configRPC.WriteStartArray();
-                //configRPC.WriteValue("view");
-                configRPC.WriteValue(serialnumber);
-                configRPC.WriteEndArray();
-                configRPC.WriteEndObject();
-                strResponse = SendCommand(sb.ToString()).ResultString;
+                RPCRequest rpcRequest = new RPCRequest();
+
+                rpcRequest.Method = "certificate";
+                rpcRequest.Params = new object[] { "view", serialnumber };
+                strResponse = SendCommand(rpcRequest).ResultString;
                 certificate = JsonConvert.DeserializeObject<Certificate>(strResponse);
             }
             catch (Exception ex)
@@ -219,6 +206,26 @@ namespace NBitcoin.Dynamic.RPC
                 throw new Exception($"Failed to view certificate", ex);
             }
             return certificate;
+        }
+
+        public CertificateVerify CertificateVerify(string serialnumber, string subject, string signature, string data)
+        {
+            CertificateVerify certificateVerify;
+            try
+            {
+                string strResponse = "";
+                RPCRequest rpcRequest = new RPCRequest();
+
+                rpcRequest.Method = "certificate";
+                rpcRequest.Params = new object[] { "verify", serialnumber, subject, signature, data };
+                strResponse = SendCommand(rpcRequest).ResultString;
+                certificateVerify = JsonConvert.DeserializeObject<CertificateVerify>(strResponse);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to verify certificate", ex);
+            }
+            return certificateVerify;
         }
 
         async Task<string> SendDynamicCommandAsyncCore(string json, bool throwIfRPCError)
