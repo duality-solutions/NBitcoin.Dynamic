@@ -188,12 +188,12 @@ namespace NBitcoin.Dynamic.RPC
             return jsonAddressTxIDs;
         }
 
-        public async Task<Certificate> CertificateView(string serialnumber)
+        public Certificate CertificateView(string serialnumber)
         {
             Certificate certificate;
             try
             {
-                string strReponse = "";
+                string strResponse = "";
                 StringBuilder sb = new StringBuilder();
                 StringWriter sw = new StringWriter(sb);
                 JsonWriter configRPC = new JsonTextWriter(sw);
@@ -211,8 +211,8 @@ namespace NBitcoin.Dynamic.RPC
                 configRPC.WriteValue(serialnumber);
                 configRPC.WriteEndArray();
                 configRPC.WriteEndObject();
-                strReponse = await SendDynamicCommandAsync(sb.ToString()).ConfigureAwait(true);
-                certificate = JsonConvert.DeserializeObject<Certificate>(strReponse);
+                strResponse = SendCommand(sb.ToString()).ResultString;
+                certificate = JsonConvert.DeserializeObject<Certificate>(strResponse);
             }
             catch (Exception ex)
             {
