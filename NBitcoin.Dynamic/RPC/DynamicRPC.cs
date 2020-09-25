@@ -204,10 +204,10 @@ namespace NBitcoin.Dynamic.RPC
                 configRPC.WritePropertyName("id");
                 configRPC.WriteValue("CertificateView");
                 configRPC.WritePropertyName("method");
-                configRPC.WriteValue("certificate");
+                configRPC.WriteValue("certificate view");
                 configRPC.WritePropertyName("params");
                 configRPC.WriteStartArray();
-                configRPC.WriteValue("view");
+                //configRPC.WriteValue("view");
                 configRPC.WriteValue(serialnumber);
                 configRPC.WriteEndArray();
                 configRPC.WriteEndObject();
