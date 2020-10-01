@@ -236,6 +236,28 @@ namespace NBitcoin.Dynamic.RPC
             return certificateVerify;
         }
 
+        public Audit AuditAdd(string hasharray, string account, string description, string algorithm)
+        {
+            Audit auditAdd;
+            try
+            {
+                string strResponse = "";
+                RPCRequest rpcRequest = new RPCRequest();
+
+                rpcRequest.Method = "audit";
+                rpcRequest.Params = new object[] { "add", hasharray, account, description, algorithm };
+                strResponse = SendCommand(rpcRequest).ResultString;
+                auditAdd = JsonConvert.DeserializeObject<Audit>(strResponse);
+            }
+            catch (Exception ex)
+            {
+                //TODO: Log error messages 
+                auditAdd = new Audit();
+                auditAdd.error_message = ex.Message;
+            }
+            return auditAdd;
+        }
+
         async Task<string> SendDynamicCommandAsyncCore(string json, bool throwIfRPCError)
         {
             string response = "";
