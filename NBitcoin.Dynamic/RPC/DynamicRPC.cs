@@ -203,7 +203,11 @@ namespace NBitcoin.Dynamic.RPC
             }
             catch (Exception ex)
             {
-                throw new Exception($"Failed to view certificate", ex);
+                //TODO: Log error messages
+                //throw new Exception($"Failed to view certificate", ex);
+                //return empty Certificate if not found
+                certificate = new Certificate();
+                certificate.error_message = ex.Message;
             }
             return certificate;
         }
@@ -223,7 +227,11 @@ namespace NBitcoin.Dynamic.RPC
             }
             catch (Exception ex)
             {
-                throw new Exception($"Failed to verify certificate", ex);
+                //TODO: Log error messages 
+                //throw new Exception($"Failed to verify certificate", ex);
+                certificateVerify = new CertificateVerify();
+                certificateVerify.valid = "false";
+                certificateVerify.error_message = ex.Message;
             }
             return certificateVerify;
         }

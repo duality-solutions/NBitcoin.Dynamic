@@ -23,12 +23,14 @@ namespace NBitcoin.Dynamic.RPC
         public int valid_from { get; set; }
         public int valid_until { get; set; }
         public string approve_height { get; set; }
+        public string error_message { get; set; }
     }
 
     public class CertificateVerify
     {
         public string valid { get; set; }
         public string certificate_subject_pubkey { get; set; }
+        public string error_message { get; set; }
 
     }
 
