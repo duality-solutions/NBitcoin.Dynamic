@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Title>NBitcoin.Dynamic</Title>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Company>Duality Blockchain Solutions</Company>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Description>Networks, chain parameters and extended RPC calls instances for the Dynamic blockchain.</Description>
@@ -25,8 +25,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Isopoh.Cryptography.Argon2" Version="1.0.8" />
-    <PackageReference Include="NBitcoin" Version="4.0.0.40" />
+    <PackageReference Include="Isopoh.Cryptography.Argon2" Version="1.1.10" />
+    <PackageReference Include="NBitcoin" Version="4.0.0.65" />
   </ItemGroup>
 
 </Project>
