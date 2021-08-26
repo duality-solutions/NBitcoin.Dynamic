@@ -23,8 +23,9 @@ namespace NBitcoin.Dynamic
 			Tuple.Create(new byte[]{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x6c,0x3d,0xd8,0xd6}, 33300)
 		};
 		static Tuple<byte[], int>[] pnSeed6_test = {
-          //Tuple.Create(new byte[]{})
-        };
+			Tuple.Create(new byte[]{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb2,0x80,0x90,0x1d}, 33400),
+			Tuple.Create(new byte[]{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x12,0xd6,0x40,0x09}, 33400)
+		};
 
 		static Tuple<byte[], int>[] pnSeed6_privatenet = {
 			Tuple.Create(new byte[]{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb2,0x80,0x90,0x1d}, 33600),
@@ -138,7 +139,7 @@ namespace NBitcoin.Dynamic
 					MajorityEnforceBlockUpgrade = 510, //from chainparams.cpp
 					MajorityRejectBlockOutdated = 750, //from chainparams.cpp
 					MajorityWindow = 1000, //from chainparams.cpp
-					PowLimit = new Target(new uint256("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")), //from chainparams.cpp
+					PowLimit = new Target(new uint256("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")), //from chainparams.cpp
 					PowTargetTimespan = TimeSpan.FromSeconds(30 * 64), //from chainparams.cpp
 					PowTargetSpacing = TimeSpan.FromSeconds(2 * 64), // from util.h  
 					PowAllowMinDifficultyBlocks = true, //from chainparams.cpp
@@ -146,7 +147,7 @@ namespace NBitcoin.Dynamic
 					RuleChangeActivationThreshold = 254, //from chainparams.cpp
 					MinerConfirmationWindow = 30, // from chainparams.cpp
 					 CoinbaseMaturity = 10, //from consensus.h
-					HashGenesisBlock = new uint256("0x000ab751d858e116043e741d097311f2382e600c219483cfda8f25c7f369cc2c"), //from chainparams.cpp
+					HashGenesisBlock = new uint256("0x00ff3a06390940bc3fffb7948cc6d0ede8fde544a5fa9eeeafbc4ac65d21f087"), //from chainparams.cpp
 					GetPoWHash = GetPoWHash
 				})
 				.SetBase58Bytes(Base58Type.PUBKEY_ADDRESS, new byte[] { 0x1e }) // from chainparams.cpp std::vector<unsigned char>(1,30)
@@ -163,14 +164,14 @@ namespace NBitcoin.Dynamic
 				.AddAlias("dynamic-testnet")
 				.AddDNSSeeds(new[]
 				{
-				new DNSSeedData("",  ""),
-				new DNSSeedData("", "")
+				    new DNSSeedData("",  ""),
+				    new DNSSeedData("", "")
 				})
 				.AddSeeds(ToSeed(pnSeed6_test))
 				.SetGenesis(new Block(new BlockHeader()
 				{
-					BlockTime = DateTimeOffset.FromUnixTimeSeconds(1513619864), //from chainparams.cpp ln 276
-					Nonce = 43629, //from chainparams.cpp ln 276
+					BlockTime = DateTimeOffset.FromUnixTimeSeconds(1515641597), //from chainparams.cpp ln 349
+					Nonce = 747, //from chainparams.cpp ln 276
 				}))
 				.BuildAndRegister();
 
