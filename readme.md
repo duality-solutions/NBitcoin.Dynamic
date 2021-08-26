@@ -7,4 +7,4 @@ This package extends the NBitcoin library
 - Adds BDAP Audit RPC calls.
 - Adds privatenet chain parameters for testing
 
-Published as a Nuget package: https://www.nuget.org/packages/NBitcoin.Dynamic/1.0.2
+Published as a Nuget package: https://www.nuget.org/packages/NBitcoin.Dynamic/1.0.3
