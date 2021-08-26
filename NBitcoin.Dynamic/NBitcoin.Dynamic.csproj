@@ -19,9 +19,9 @@
 - Adds GetAddressUTXOsAsync to the supported RPC calls.
 - Adds GetAddressTxIDsAsync to the supported RPC calls.
 - Adds GetTransactionAsync to the supported RPC calls.  GetTransactionAsync has more details than GetRawTransactionAsync like blockheight, tx time, and input values.</PackageReleaseNotes>
-    <Version>1.0.2</Version>
-    <AssemblyVersion>1.0.2.0</AssemblyVersion>
-    <FileVersion>1.0.2.0</FileVersion>
+    <Version>1.0.3</Version>
+    <AssemblyVersion>1.0.3.0</AssemblyVersion>
+    <FileVersion>1.0.3.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
