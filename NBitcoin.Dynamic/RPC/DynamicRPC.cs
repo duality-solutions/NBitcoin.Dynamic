@@ -188,6 +188,97 @@ namespace NBitcoin.Dynamic.RPC
             return jsonAddressTxIDs;
         }
 
+        public Certificate CertificateView(string serialnumber)
+        {
+            Certificate certificate;
+            try
+            {
+                string strResponse = "";
+                RPCRequest rpcRequest = new RPCRequest();
+
+                rpcRequest.Method = "certificate";
+                rpcRequest.Params = new object[] { "view", serialnumber };
+                strResponse = SendCommand(rpcRequest).ResultString;
+                certificate = JsonConvert.DeserializeObject<Certificate>(strResponse);
+            }
+            catch (Exception ex)
+            {
+                //TODO: Log error messages
+                //throw new Exception($"Failed to view certificate", ex);
+                //return empty Certificate if not found
+                certificate = new Certificate();
+                if (ex.InnerException != null)
+                {
+                    certificate.error_message = ex.InnerException.Message;
+                }
+                else
+                {
+                    certificate.error_message = ex.Message;
+                }
+            }
+            return certificate;
+        }
+
+        public CertificateVerify CertificateVerify(string serialnumber, string subject, string signature, string data)
+        {
+            CertificateVerify certificateVerify;
+            try
+            {
+                string strResponse = "";
+                RPCRequest rpcRequest = new RPCRequest();
+
+                rpcRequest.Method = "certificate";
+                rpcRequest.Params = new object[] { "verify", serialnumber, subject, signature, data };
+                strResponse = SendCommand(rpcRequest).ResultString;
+                certificateVerify = JsonConvert.DeserializeObject<CertificateVerify>(strResponse);
+            }
+            catch (Exception ex)
+            {
+                //TODO: Log error messages 
+                //throw new Exception($"Failed to verify certificate", ex);
+                certificateVerify = new CertificateVerify();
+                certificateVerify.valid = "false";
+                if (ex.InnerException != null)
+                {
+                    certificateVerify.error_message = ex.InnerException.Message;
+                }
+                else
+                {
+                    certificateVerify.error_message = ex.Message;
+                }
+            }
+            return certificateVerify;
+        }
+
+        public Audit AuditAdd(string hasharray, string account, string description, string algorithm)
+        {
+            Audit auditAdd;
+            try
+            {
+                string strResponse = "";
+                RPCRequest rpcRequest = new RPCRequest();
+
+                rpcRequest.Method = "audit";
+                rpcRequest.Params = new object[] { "add", hasharray, account, description, algorithm };
+                strResponse = SendCommand(rpcRequest).ResultString;
+                auditAdd = JsonConvert.DeserializeObject<Audit>(strResponse);
+            }
+            catch (Exception ex)
+            {
+                //TODO: Log error messages 
+                auditAdd = new Audit();
+                if (ex.InnerException != null)
+                {
+                    auditAdd.error_message = ex.InnerException.Message;
+                }
+                else
+                {
+                    auditAdd.error_message = ex.Message;
+                }
+            }
+            return auditAdd;
+        }
+
         async Task<string> SendDynamicCommandAsyncCore(string json, bool throwIfRPCError)
         {
             string response = "";

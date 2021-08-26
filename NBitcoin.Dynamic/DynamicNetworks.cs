@@ -11,6 +11,7 @@ namespace NBitcoin.Dynamic
 	{
 		private static Network _mainnet;
 		private static Network _testnet;
+		private static Network _privatenet;
 		private static object _lock = new object();
 
 		static Tuple<byte[], int>[] pnSeed6_main = {
@@ -22,8 +23,14 @@ namespace NBitcoin.Dynamic
 			Tuple.Create(new byte[]{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x6c,0x3d,0xd8,0xd6}, 33300)
 		};
 		static Tuple<byte[], int>[] pnSeed6_test = {
-          //Tuple.Create(new byte[]{})
-        };
+			Tuple.Create(new byte[]{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb2,0x80,0x90,0x1d}, 33400),
+			Tuple.Create(new byte[]{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x12,0xd6,0x40,0x09}, 33400)
+		};
+
+		static Tuple<byte[], int>[] pnSeed6_privatenet = {
+			Tuple.Create(new byte[]{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb2,0x80,0x90,0x1d}, 33600),
+			Tuple.Create(new byte[]{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x12,0xd6,0x40,0x09}, 33600)
+		};
 
 		public static void Register()
 		{
@@ -35,6 +42,11 @@ namespace NBitcoin.Dynamic
 			if (_testnet == null)
 			{
 				_testnet = RegisterTestnet();
+			}
+
+			if (_privatenet == null)
+			{
+				_privatenet = RegisterPrivatenet();
 			}
 		}
 
@@ -51,6 +63,13 @@ namespace NBitcoin.Dynamic
 			get
 			{
 				return _testnet ?? RegisterTestnet();
+			}
+		}
+		public static Network Privatenet
+		{
+			get
+			{
+				return _privatenet ?? RegisterPrivatenet();
 			}
 		}
 
@@ -120,7 +139,7 @@ namespace NBitcoin.Dynamic
 					MajorityEnforceBlockUpgrade = 510, //from chainparams.cpp
 					MajorityRejectBlockOutdated = 750, //from chainparams.cpp
 					MajorityWindow = 1000, //from chainparams.cpp
-					PowLimit = new Target(new uint256("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")), //from chainparams.cpp
+					PowLimit = new Target(new uint256("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")), //from chainparams.cpp
 					PowTargetTimespan = TimeSpan.FromSeconds(30 * 64), //from chainparams.cpp
 					PowTargetSpacing = TimeSpan.FromSeconds(2 * 64), // from util.h  
 					PowAllowMinDifficultyBlocks = true, //from chainparams.cpp
@@ -128,7 +147,7 @@ namespace NBitcoin.Dynamic
 					RuleChangeActivationThreshold = 254, //from chainparams.cpp
 					MinerConfirmationWindow = 30, // from chainparams.cpp
 					 CoinbaseMaturity = 10, //from consensus.h
-					HashGenesisBlock = new uint256("0x000ab751d858e116043e741d097311f2382e600c219483cfda8f25c7f369cc2c"), //from chainparams.cpp
+					HashGenesisBlock = new uint256("0x00ff3a06390940bc3fffb7948cc6d0ede8fde544a5fa9eeeafbc4ac65d21f087"), //from chainparams.cpp
 					GetPoWHash = GetPoWHash
 				})
 				.SetBase58Bytes(Base58Type.PUBKEY_ADDRESS, new byte[] { 0x1e }) // from chainparams.cpp std::vector<unsigned char>(1,30)
@@ -145,18 +164,70 @@ namespace NBitcoin.Dynamic
 				.AddAlias("dynamic-testnet")
 				.AddDNSSeeds(new[]
 				{
-				new DNSSeedData("",  ""),
-				new DNSSeedData("", "")
+				    new DNSSeedData("",  ""),
+				    new DNSSeedData("", "")
 				})
 				.AddSeeds(ToSeed(pnSeed6_test))
 				.SetGenesis(new Block(new BlockHeader()
 				{
-					BlockTime = DateTimeOffset.FromUnixTimeSeconds(1513619864), //from chainparams.cpp ln 276
-					Nonce = 43629, //from chainparams.cpp ln 276
+					BlockTime = DateTimeOffset.FromUnixTimeSeconds(1515641597), //from chainparams.cpp ln 349
+					Nonce = 747, //from chainparams.cpp ln 276
 				}))
 				.BuildAndRegister();
 
 				return _testnet;
+			}
+		}
+
+		private static Network RegisterPrivatenet()
+		{
+			lock (_lock)
+			{
+				var builder = new NetworkBuilder();
+
+				_privatenet = builder.SetConsensus(new Consensus()
+				{
+					SubsidyHalvingInterval = 2147483647, // set to maximum value for type int. dynamic does not use 
+					MajorityEnforceBlockUpgrade = 510, //from chainparams.cpp
+					MajorityRejectBlockOutdated = 750, //from chainparams.cpp
+					MajorityWindow = 1000, //from chainparams.cpp
+					PowLimit = new Target(new uint256("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")), //from chainparams.cpp
+					PowTargetTimespan = TimeSpan.FromSeconds(30 * 64), //from chainparams.cpp
+					PowTargetSpacing = TimeSpan.FromSeconds(2 * 64), // from util.h  
+					PowAllowMinDifficultyBlocks = true, //from chainparams.cpp
+					PowNoRetargeting = false, //from chainparams.cpp
+					RuleChangeActivationThreshold = 254, //from chainparams.cpp
+					MinerConfirmationWindow = 30, // from chainparams.cpp
+					CoinbaseMaturity = 10, //COINBASE_MATURITY from consensus.h
+					HashGenesisBlock = new uint256("0x000055a9348d53bed51996102ad11d129207e85dc197d01a5a69d5fd10af0e8a"), //from chainparams.cpp*
+					GetPoWHash = GetPoWHash
+				})
+				.SetBase58Bytes(Base58Type.PUBKEY_ADDRESS, new byte[] { 0x1e }) // from chainparams.cpp std::vector<unsigned char>(1,30)
+				.SetBase58Bytes(Base58Type.SCRIPT_ADDRESS, new byte[] { 0xa }) // from chainparams.cpp std::vector<unsigned char>(1,10)
+				.SetBase58Bytes(Base58Type.SECRET_KEY, new byte[] { 0x9e }) // from chainparams.cpp  std::vector<unsigned char>(1,158)
+				.SetBase58Bytes(Base58Type.EXT_PUBLIC_KEY, new byte[] { 0x04, 0x35, 0x87, 0xCF }) //from chainparams.cpp 
+				.SetBase58Bytes(Base58Type.EXT_SECRET_KEY, new byte[] { 0x04, 0x35, 0x83, 0x94 }) //from chainparams.cpp 
+				.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("tdynamic"))
+				.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("tdynamic"))
+				.SetMagic(0x2f321540) //from chainparams.cpp, pchMessageStart 
+				.SetPort(33300 + 300) //from chainparams.cpp *
+				.SetRPCPort(33650) // from chainparamsbase.cpp *
+				.SetName("dynamic-private")
+				.AddAlias("dynamic-privatenet")
+				.AddDNSSeeds(new[]
+				{
+				new DNSSeedData("",  ""),
+				new DNSSeedData("", "")
+				})
+				.AddSeeds(ToSeed(pnSeed6_privatenet))
+				.SetGenesis(new Block(new BlockHeader()
+				{
+					BlockTime = DateTimeOffset.FromUnixTimeSeconds(1559867972), //from chainparams.cpp, genesis = CreateGenesisBlock *
+					Nonce = 60883, //from chainparams.cpp, genesis = CreateGenesisBlock *
+				}))
+				.BuildAndRegister();
+
+				return _privatenet;
 			}
 		}
 
